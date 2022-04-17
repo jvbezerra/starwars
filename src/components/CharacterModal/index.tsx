@@ -3,6 +3,7 @@ import Skeleton from '@mui/material/Skeleton'
 import Typography from '@mui/material/Typography'
 import useSWR from 'swr/immutable'
 import Avatar, { AvatarSkeleton } from '../Avatar'
+import { Metadata } from '../Header'
 import Modal from '../Modal'
 
 interface Props {
@@ -44,6 +45,7 @@ const CharacterModal: React.FC<Props> = ({ character, onClose }) => {
 
   return (
     <Modal open={true} onClose={onClose}>
+      <Metadata title={character.name} />
       <Container>
         {loadingSpecie
           ? <AvatarSkeleton/>
