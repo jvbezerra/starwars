@@ -1,7 +1,7 @@
 import axios from 'axios'
 import useSWR from 'swr/immutable'
 import { GetStaticProps } from 'next'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useURLState } from '../hooks/useURLState'
 
 import Header from '../components/Header'
@@ -13,7 +13,6 @@ const Home: React.FC<{ fallbackData: SwapiResponse<Character[]> }> = ({ fallback
   const [page, setPage] = useURLState<number>('page', 1)
   const [selectedCharacter, setSelectedCharacter] = useURLState<string>('character', '')
   const [character, setCharacter] = useState<Character | undefined>()
-
   const { data } = useSWR<SwapiResponse<Character[]>>(
     `https://swapi.dev/api/people?page=${page}`,
     { fallbackData: page === 1 ? fallbackData : undefined }
@@ -26,6 +25,15 @@ const Home: React.FC<{ fallbackData: SwapiResponse<Character[]> }> = ({ fallback
     }
   }, [selectedCharacter, data?.results])
 
+  const onCloseModal = useCallback(() => {
+    setCharacter(undefined)
+    setSelectedCharacter('')
+  }, [])
+
+  const onChangePage = useCallback((_: any, page: number) => {
+    setPage(page)
+  }, [])
+
   return (
     <>
       <Header/>
@@ -36,21 +44,17 @@ const Home: React.FC<{ fallbackData: SwapiResponse<Character[]> }> = ({ fallback
           onSelect={setSelectedCharacter}
         />
 
-        {character &&
-          <CharacterModal
-            character={character}
-            onClose={() => {
-              setCharacter(undefined)
-              setSelectedCharacter('')
-            }}
-          />
-        }
+        <CharacterModal
+          isOpen={!!character}
+          character={character}
+          onClose={onCloseModal}
+        />
       </main>
 
       <Pagination
         page={page}
         count={Math.ceil(data?.count! / 10)}
-        onChange={(_, page) => setPage(page)}
+        onChange={onChangePage}
       />
     </>
   )

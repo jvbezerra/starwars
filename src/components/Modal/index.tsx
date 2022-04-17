@@ -1,4 +1,4 @@
-import Dialog from '@mui/material/Dialog'
+import Dialog, { DialogProps } from '@mui/material/Dialog'
 import DialogContent from '@mui/material/DialogContent'
 import DialogTitle from '@mui/material/DialogTitle'
 import IconButton from '@mui/material/IconButton'
@@ -6,18 +6,17 @@ import SvgIcon from '@mui/material/SvgIcon'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import { useTheme } from '@mui/material/styles'
 
-interface Props {
+interface Props extends DialogProps {
   open: boolean,
   onClose: () => void,
-  children?: React.ReactNode
 }
 
-const Modal: React.FC<Props> = ({ open, onClose, children }) => {
+const Modal: React.FC<Props> = ({ open, onClose, children, ...props }) => {
   const theme = useTheme()
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'))
 
   return (
-    <Dialog open={open} onClose={onClose} fullScreen={fullScreen}>
+    <Dialog open={open} onClose={onClose} fullScreen={fullScreen} {...props}>
       <DialogTitle>
         <IconButton
           aria-label="close"

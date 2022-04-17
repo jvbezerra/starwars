@@ -1,14 +1,16 @@
 import styled from '@emotion/styled'
 import Skeleton from '@mui/material/Skeleton'
 import Typography from '@mui/material/Typography'
+import { memo } from 'react'
 import useSWR from 'swr/immutable'
 import Avatar, { AvatarSkeleton } from '../Avatar'
 import { Metadata } from '../Header'
 import Modal from '../Modal'
 
 interface Props {
+  isOpen: boolean,
   onClose: () => void,
-  character: Character
+  character?: Character
 }
 
 const detailsEntries = [
@@ -35,21 +37,21 @@ const Section = styled.section`
   width: 75%;
 `
 
-const CharacterModal: React.FC<Props> = ({ character, onClose }) => {
+const CharacterModal: React.FC<Props> = ({ character, onClose, isOpen }) => {
   const {
     data: specie,
     isValidating: loadingSpecie
-  } = useSWR<{ name: string }>(character.species[0])
+  } = useSWR<{ name: string }>(character?.species[0])
 
-  const { data: films } = useSWR<{ title: string }[]>(character.films)
+  const { data: films } = useSWR<{ title: string }[]>(character?.films)
 
   return (
-    <Modal open={true} onClose={onClose}>
-      <Metadata title={character.name} />
+    <Modal open={isOpen} onClose={onClose} keepMounted={true}>
+      <Metadata title={character?.name} />
       <Container>
         {loadingSpecie
           ? <AvatarSkeleton/>
-          : <Avatar specie={specie?.name ?? `Human ${character.gender}`} />
+          : <Avatar specie={specie?.name ?? `Human ${character?.gender}`} />
         }
 
         <Typography variant="h6">
@@ -59,7 +61,7 @@ const CharacterModal: React.FC<Props> = ({ character, onClose }) => {
         {detailsEntries.map(([label, key]) => (
           <Section key={key}>
             <Typography variant="button">{ label }:</Typography>
-            <Typography variant="caption">{ character[key] }</Typography>
+            <Typography variant="caption">{ character ? character[key] : '' }</Typography>
           </Section>
         ))}
         
@@ -83,4 +85,4 @@ const CharacterModal: React.FC<Props> = ({ character, onClose }) => {
   )
 }
 
-export default CharacterModal
+export default memo(CharacterModal)
