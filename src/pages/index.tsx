@@ -8,16 +8,11 @@ import Header from '../components/Header'
 import CharacterList from '../components/CharacterList'
 import Pagination from '../components/Pagination'
 
-const fetch = async (url: string) => {
-  const { data } = await api.get(url)
-  return data
-}
-
 const Home: React.FC<{ fallbackData: SwapiResponse<Character[]> }> = ({ fallbackData }) => {
   const [page, setPage] = useState(1)
   const { getParam, setParam } = useQuery()
   const { data } = useSWR<SwapiResponse<Character[]>>(
-    `/people?page=${page}`, fetch,
+    `/people?page=${page}`,
     { fallbackData: page === 1 ? fallbackData : undefined }
   )
 
