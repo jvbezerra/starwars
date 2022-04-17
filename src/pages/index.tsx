@@ -1,8 +1,8 @@
 import axios from 'axios'
 import useSWR from 'swr/immutable'
 import { GetStaticProps } from 'next'
-import { useCallback, useEffect, useState } from 'react'
-import { useQuery } from '../hooks/useQuery'
+import { useEffect, useState } from 'react'
+import { useURLState } from '../hooks/useURLState'
 
 import Header from '../components/Header'
 import CharacterList from '../components/CharacterList'
@@ -10,38 +10,21 @@ import CharacterModal from '../components/CharacterModal'
 import Pagination from '../components/Pagination'
 
 const Home: React.FC<{ fallbackData: SwapiResponse<Character[]> }> = ({ fallbackData }) => {
-  const [page, setPage] = useState(1)
-  const [selectedCharacter, setCharacter] = useState<Character | undefined>()
+  const [page, setPage] = useURLState<number>('page', 1)
+  const [selectedCharacter, setSelectedCharacter] = useURLState<string>('character', '')
+  const [character, setCharacter] = useState<Character | undefined>()
 
-  const { getParam, setParam } = useQuery()
   const { data } = useSWR<SwapiResponse<Character[]>>(
     `https://swapi.dev/api/people?page=${page}`,
     { fallbackData: page === 1 ? fallbackData : undefined }
-  ) 
-
-  const changeCharacter = useCallback((name: string) => {
-    const character = data?.results.find(character => character.name == name)
-    setParam('character', name)
-    setCharacter(character)
-  }, [data?.results])
-
-  const changePage = useCallback((_: any, page: number) => {
-    setParam('page', page.toString())
-    setPage(page)
-  }, [])
+  )
 
   useEffect(() => {
-    const page = Number(getParam('page'))
-    if (page) setPage(page)
-  }, [])
-
-  useEffect(() => {
-    const characterName = getParam('character')
-    if (characterName && data?.results) {
-      const character = data?.results.find(character => character.name == characterName)
+    if (selectedCharacter && data?.results) {
+      const character = data?.results.find(character => character.name == selectedCharacter)
       setCharacter(character)
     }
-  }, [data?.results])
+  }, [selectedCharacter, data?.results])
 
   return (
     <>
@@ -50,13 +33,16 @@ const Home: React.FC<{ fallbackData: SwapiResponse<Character[]> }> = ({ fallback
       <main>
         <CharacterList
           characters={data?.results}
-          onSelect={changeCharacter}
+          onSelect={setSelectedCharacter}
         />
 
-        {selectedCharacter &&
+        {character &&
           <CharacterModal
-            character={selectedCharacter}
-            onClose={() => setCharacter(undefined)}
+            character={character}
+            onClose={() => {
+              setCharacter(undefined)
+              setSelectedCharacter('')
+            }}
           />
         }
       </main>
@@ -64,7 +50,7 @@ const Home: React.FC<{ fallbackData: SwapiResponse<Character[]> }> = ({ fallback
       <Pagination
         page={page}
         count={Math.ceil(data?.count! / 10)}
-        onChange={changePage}
+        onChange={(_, page) => setPage(page)}
       />
     </>
   )
