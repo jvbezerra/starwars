@@ -1,4 +1,5 @@
 type Character = {
+  [key: string]: string | string[],
   name: string,
   gender: string,
   eye_color: string,
@@ -8,7 +9,7 @@ type Character = {
   skin_color: string,
   birth_year: string,
   homeworld: string,
-  films: string,
+  films: string[],
   species: string[],
 }
 
