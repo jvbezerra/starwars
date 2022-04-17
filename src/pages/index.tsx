@@ -1,7 +1,7 @@
+import axios from 'axios'
 import { GetStaticProps } from 'next'
 import { useEffect, useState } from 'react'
 import useSWR from 'swr/immutable'
-import api from '../service'
 import { useQuery } from '../hooks/useQuery'
 
 import Header from '../components/Header'
@@ -12,7 +12,7 @@ const Home: React.FC<{ fallbackData: SwapiResponse<Character[]> }> = ({ fallback
   const [page, setPage] = useState(1)
   const { getParam, setParam } = useQuery()
   const { data } = useSWR<SwapiResponse<Character[]>>(
-    `/people?page=${page}`,
+    `https://swapi.dev/api/people?page=${page}`,
     { fallbackData: page === 1 ? fallbackData : undefined }
   )
 
@@ -44,7 +44,7 @@ const Home: React.FC<{ fallbackData: SwapiResponse<Character[]> }> = ({ fallback
 }
 
 export const getStaticProps: GetStaticProps = async () => {
-  const { data: fallbackData } = await api.get('/people')
+  const { data: fallbackData } = await axios.get('https://swapi.dev/api/people')
   return { props: { fallbackData } }
 }
 
