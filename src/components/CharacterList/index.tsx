@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 import CharacterCard from '../CharacterCard'
 import { CardSkeleton } from '../Card'
+import { memo } from 'react'
 
 interface Props {
   characters: Character[] | undefined,
@@ -33,4 +34,4 @@ const CharacterList: React.FC<Props> = ({ characters = [...new Array(10)], onSel
   )
 }
 
-export default CharacterList
+export default memo(CharacterList)

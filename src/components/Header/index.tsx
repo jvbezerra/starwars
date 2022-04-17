@@ -1,5 +1,6 @@
 import Head from 'next/head'
 import Image from 'next/image'
+import { memo } from 'react'
 
 export const Metadata: React.FC<{ title?: string, description?: string }> = ({ 
   title = "Star Wars Characters",
@@ -22,8 +23,8 @@ export const Metadata: React.FC<{ title?: string, description?: string }> = ({
 const Header = () => (
   <header style={{ display: 'flex', justifyContent: 'center' }}>
     <Metadata />
-    <Image alt="Star Wars" src="/starwars.png" width="150px"height="60px"/>
+    <Image alt="Star Wars" src="/starwars.png" width="150px"height="65px"/>
   </header>
 )
 
-export default Header
+export default memo(Header)

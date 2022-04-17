@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { GetStaticProps } from 'next'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import useSWR from 'swr/immutable'
 import { useQuery } from '../hooks/useQuery'
 
@@ -19,6 +19,16 @@ const Home: React.FC<{ fallbackData: SwapiResponse<Character[]> }> = ({ fallback
     { fallbackData: page === 1 ? fallbackData : undefined }
   )
 
+  const changeCharacter = useCallback((name: string) => {
+    const character = data?.results.find(character => character.name === name)
+    setCharacter(character)
+  }, [data?.results])
+
+  const changePage = useCallback((_: any, page: number) => {
+    setParam('page', page.toString())
+    setPage(page)
+  }, [])
+
   useEffect(() => {
     const page = Number(getParam('page'))
     if (page) setPage(page)
@@ -31,10 +41,7 @@ const Home: React.FC<{ fallbackData: SwapiResponse<Character[]> }> = ({ fallback
       <main>
         <CharacterList
           characters={data?.results}
-          onSelect={name => {
-            const character = data?.results.find(character => character.name === name)
-            setCharacter(character)
-          }}
+          onSelect={changeCharacter}
         />
 
         {selectedCharacter &&
@@ -48,10 +55,7 @@ const Home: React.FC<{ fallbackData: SwapiResponse<Character[]> }> = ({ fallback
       <Pagination
         page={page}
         count={Math.ceil(data?.count! / 10)}
-        onChange={(_, page) => {
-          setParam('page', page.toString())
-          setPage(page)
-        }}
+        onChange={changePage}
       />
     </>
   )
