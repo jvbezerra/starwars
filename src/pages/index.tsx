@@ -6,10 +6,13 @@ import { useQuery } from '../hooks/useQuery'
 
 import Header from '../components/Header'
 import CharacterList from '../components/CharacterList'
+import CharacterModal from '../components/CharacterModal'
 import Pagination from '../components/Pagination'
 
 const Home: React.FC<{ fallbackData: SwapiResponse<Character[]> }> = ({ fallbackData }) => {
   const [page, setPage] = useState(1)
+  const [selectedCharacter, setCharacter] = useState<Character | undefined>()
+
   const { getParam, setParam } = useQuery()
   const { data } = useSWR<SwapiResponse<Character[]>>(
     `https://swapi.dev/api/people?page=${page}`,
@@ -17,8 +20,8 @@ const Home: React.FC<{ fallbackData: SwapiResponse<Character[]> }> = ({ fallback
   )
 
   useEffect(() => {
-    const page = getParam('page')
-    if (page) setPage(Number(page))
+    const page = Number(getParam('page'))
+    if (page) setPage(page)
   }, [])
 
   return (
@@ -28,7 +31,18 @@ const Home: React.FC<{ fallbackData: SwapiResponse<Character[]> }> = ({ fallback
       <main>
         <CharacterList
           characters={data?.results}
+          onSelect={name => {
+            const character = data?.results.find(character => character.name === name)
+            setCharacter(character)
+          }}
         />
+
+        {selectedCharacter &&
+          <CharacterModal
+            character={selectedCharacter}
+            onClose={() => setCharacter(undefined)}
+          />
+        }
       </main>
 
       <Pagination

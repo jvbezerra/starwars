@@ -5,9 +5,10 @@ import Card from '../Card'
 
 interface Props {
   character: Character
+  onClick?: () => void
 }
 
-const CharacterCard: React.FC<Props> = ({ character }) => {
+const CharacterCard: React.FC<Props> = ({ character, ...props }) => {
   const {
     data: specie,
     isValidating: loadingSpecie
@@ -19,7 +20,7 @@ const CharacterCard: React.FC<Props> = ({ character }) => {
   } = useSWR<{ name: string }>(character.homeworld)
 
   return (
-    <Card component="li" elevation={3}>
+    <Card component="li" elevation={3} {...props}>
       {loadingSpecie
         ? <AvatarSkeleton/>
         : <Avatar specie={specie?.name ?? `Human ${character.gender}`} />

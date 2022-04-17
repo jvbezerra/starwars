@@ -5,7 +5,6 @@ import Avatar, { AvatarSkeleton } from '../Avatar'
 import Modal from '../Modal'
 
 interface Props {
-  isOpen: boolean,
   onClose: () => void,
   character: Character
 }
@@ -20,7 +19,7 @@ const detailsEntries = [
   ['Birth Year', 'birth_year'],
 ]
 
-const Container = styled.div`
+const Container = styled.article`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -28,19 +27,22 @@ const Container = styled.div`
   gap: 5px;
 `
 
-const CharacterModal: React.FC<Props> = ({ isOpen, onClose, character }) => {
+const Section = styled.section`
+  display: flex;
+  justify-content: space-between;
+  width: 75%;
+`
+
+const CharacterModal: React.FC<Props> = ({ character, onClose }) => {
   const {
     data: specie,
     isValidating: loadingSpecie
   } = useSWR<{ name: string }>(character.species[0])
 
-  const {
-    data: films,
-    isValidating: loadingFilms
-  } = useSWR<{ title: string }[]>(character.films)
+  const { data: films } = useSWR<{ title: string }[]>(character.films)
 
   return (
-    <Modal open={isOpen} onClose={onClose}>
+    <Modal open={true} onClose={onClose}>
       <Container>
         {loadingSpecie
           ? <AvatarSkeleton/>
@@ -52,23 +54,27 @@ const CharacterModal: React.FC<Props> = ({ isOpen, onClose, character }) => {
         </Typography>
 
         {detailsEntries.map(([label, key]) => (
-          <div key={key} style={{ display: 'flex', justifyContent: 'space-between', width: '75%' }}>
+          <Section key={key}>
             <Typography variant="button">{ label }:</Typography>
             <Typography variant="caption">{ character[key] }</Typography>
-          </div>
+          </Section>
         ))}
         
-        <div style={{ display: 'flex' }}>
+        <Section>
           <Typography variant="button" paddingRight="10px">
             Films:
           </Typography>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
-            {loadingFilms
-              ? <Skeleton variant="rectangular" />
-              : films?.map(({ title }, key) => <Typography key={key} variant="caption">{ title }</Typography>)
+            {films && films?.length > 0
+              ? films?.map(({ title }, key) => (
+                <Typography key={key} variant="caption">
+                  { title }
+                </Typography>
+              ))
+              : <Skeleton width="100px" variant="rectangular" />
             }
           </div>
-        </div>
+        </Section>
       </Container>
     </Modal>
   )

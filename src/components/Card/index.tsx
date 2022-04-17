@@ -15,7 +15,8 @@ export const CardSkeleton = () => (
 const Card = styled(MuiPaper)<PaperProps & { component: string }>({
   display: 'flex',
   alignItems: 'center',
-  padding: '10px'
+  padding: '10px',
+  cursor: 'pointer'
 })
 
 export default Card

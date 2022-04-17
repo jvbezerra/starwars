@@ -3,7 +3,8 @@ import CharacterCard from '../CharacterCard'
 import { CardSkeleton } from '../Card'
 
 interface Props {
-  characters: Character[] | undefined
+  characters: Character[] | undefined,
+  onSelect: (name: string) => void
 }
 
 const List = styled.ul`
@@ -17,12 +18,16 @@ const List = styled.ul`
   margin: unset;
 `
 
-const CharacterList: React.FC<Props> = ({ characters = [...new Array(10)] }) => {
+const CharacterList: React.FC<Props> = ({ characters = [...new Array(10)], onSelect }) => {
   return (
     <List>
       {characters.map((character, key) => (
         !character ? <CardSkeleton /> :
-        <CharacterCard key={key} character={character}/>
+        <CharacterCard
+          key={key}
+          character={character}
+          onClick={() => onSelect(character.name)}
+        />
       ))}
     </List>
   )
