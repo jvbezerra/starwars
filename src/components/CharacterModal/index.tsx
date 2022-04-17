@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
-import { Skeleton, Typography } from '@mui/material'
+import Skeleton from '@mui/material/Skeleton'
+import Typography from '@mui/material/Typography'
 import useSWR from 'swr/immutable'
 import Avatar, { AvatarSkeleton } from '../Avatar'
 import Modal from '../Modal'

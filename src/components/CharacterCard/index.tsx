@@ -1,5 +1,6 @@
-import { Skeleton, Typography } from '@mui/material'
 import useSWR from 'swr/immutable'
+import Skeleton from '@mui/material/Skeleton'
+import Typography from '@mui/material/Typography'
 import Avatar, { AvatarSkeleton } from '../Avatar'
 import Card from '../Card'
 

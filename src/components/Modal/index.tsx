@@ -1,12 +1,10 @@
-import { 
-  Dialog,
-  DialogContent,
-  DialogTitle, 
-  IconButton, 
-  SvgIcon,
-  useMediaQuery,
-  useTheme
-} from '@mui/material'
+import Dialog from '@mui/material/Dialog'
+import DialogContent from '@mui/material/DialogContent'
+import DialogTitle from '@mui/material/DialogTitle'
+import IconButton from '@mui/material/IconButton'
+import SvgIcon from '@mui/material/SvgIcon'
+import useMediaQuery from '@mui/material/useMediaQuery'
+import { useTheme } from '@mui/material/styles'
 
 interface Props {
   open: boolean,
