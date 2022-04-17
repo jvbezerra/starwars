@@ -1,8 +1,9 @@
 import styled from '@emotion/styled'
 import CharacterCard from '../CharacterCard'
+import { CardSkeleton } from '../Card'
 
 interface Props {
-  characters?: any[]
+  characters: Character[] | undefined
 }
 
 const List = styled.ul`
@@ -20,6 +21,7 @@ const CharacterList: React.FC<Props> = ({ characters = [...new Array(10)] }) => 
   return (
     <List>
       {characters.map((character, key) => (
+        !character ? <CardSkeleton /> :
         <CharacterCard key={key} character={character}/>
       ))}
     </List>

@@ -10,7 +10,7 @@ const defaultProps: AvatarProps = {
 }
 
 export const specieToAvatar: Record<string, AvatarProps> = {
-  'Human Male': {
+  'Human male': {
     ...defaultProps,
     topType:'ShortHairShortFlat',
     hairColor:'BrownDark',
@@ -19,7 +19,7 @@ export const specieToAvatar: Record<string, AvatarProps> = {
     mouthType:'Serious',
     skinColor:'Light',
   },
-  'Human Female': {
+  'Human female': {
     ...defaultProps,
     topType:'LongHairBigHair',
     hairColor:'BrownDark',
